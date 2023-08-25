@@ -1,14 +1,29 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import styles from "./Login.module.scss";
+import { useState } from "react";
+import axios from "axios";
 
 function Login() {
+  const [values, setValues] = useState({
+    email: "",
+    password: "",
+  });
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    axios
+      .post("http://localhost:8081/login", values)
+      .then((res) => console.log(res))
+      .catch((err) => console.log(err));
+  };
+
   return (
     <div
       className={`d-flex justify-content-center align-items-center vh-100 ${styles.loginPage}`}
     >
       <div className={`p-3 rounded w-25 border ${styles.loginForm}`}>
         <h2>Login</h2>
-        <form>
+        <form onSubmit={handleSubmit}>
           <div className="mb-3">
             <label htmlFor="email">
               <strong>Email</strong>
@@ -19,6 +34,7 @@ function Login() {
               name="email"
               className="form-control rounded-0"
               autoComplete="off"
+              onChange={(e) => setValues({ ...values, email: e.target.value })}
             />
           </div>
           <div className="mb-3">
@@ -30,6 +46,9 @@ function Login() {
               placeholder="Enter Password"
               name="password"
               className="form-control rounded-0"
+              onChange={(e) => {
+                setValues({ ...values, password: e.target.value });
+              }}
             />
           </div>
           <button type="submit" className="btn btn-success w-100 rounded-0">
