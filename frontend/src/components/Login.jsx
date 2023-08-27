@@ -1,6 +1,7 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import styles from "./Login.module.scss";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 function Login() {
@@ -9,11 +10,21 @@ function Login() {
     password: "",
   });
 
+  const navigate = useNavigate();
+
+  const [error, setError] = useState("");
+
   const handleSubmit = (e) => {
     e.preventDefault();
     axios
       .post("http://localhost:8081/login", values)
-      .then((res) => console.log(res))
+      .then((res) => {
+        if (res.data.Status === "Success") {
+          navigate("/");
+        } else {
+          setError(res.data.Error);
+        }
+      })
       .catch((err) => console.log(err));
   };
 

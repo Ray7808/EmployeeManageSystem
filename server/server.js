@@ -31,17 +31,18 @@ con.connect(function (err) {
 app.post("/login", (req, res) => {
   const sql = "SELECT * FROM users WHERE email = ? AND password = ?";
   con.query(sql, [req.body.email, req.body.password], (err, result) => {
-    if (err) return res.json({ Error: "Error in server!" });
+    if (err)
+      return res.json({ Status: "Error", Error: "Error in running query!" });
     if (result.length > 0) {
-      return res.json({ Status: "Success!" });
+      return res.json({ Status: "Success" });
     } else {
-      return res.json({ Status: "Error!" });
+      return res.json({ Status: "Error", Error: "Wrong email or password" });
     }
   });
 });
 
-app.post("/login", (req, res) => {
-  res.send.json("login");
+app.get("/", (req, res) => {
+  res.json("Hello World");
 });
 
 app.listen(8081, () => {
