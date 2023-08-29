@@ -1,4 +1,5 @@
 import "bootstrap-icons/font/bootstrap-icons.css";
+import { Link } from "react-router-dom";
 
 function Dashboard() {
   return (
@@ -58,7 +59,11 @@ function Dashboard() {
               </ul>
             </div>
           </div>
-          <div className="col py-3">Content area...</div>
+          <div className="col p-0 m-0">
+            <div className="p-2 d-flex justify-content-center border shadow">
+              <h4>Employee Management System</h4>
+            </div>
+          </div>
         </div>
       </div>
     </div>
