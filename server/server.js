@@ -5,6 +5,8 @@ import cookieParser from "cookie-parser";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
+import multer from "multer";
+import path from "path";
 
 dotenv.config();
 
@@ -28,6 +30,20 @@ con.connect(function (err) {
   }
 });
 
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "public/images");
+  },
+  filename: function (req, file, cb) {
+    cb(
+      null,
+      file.fieldname + "_" + Date.now() + path.extname(file.originalname)
+    );
+  },
+});
+
+const upload = multer({ storage: storage });
+
 app.post("/login", (req, res) => {
   const sql = "SELECT * FROM users WHERE email = ? AND password = ?";
   con.query(sql, [req.body.email, req.body.password], (err, result) => {
@@ -38,6 +54,27 @@ app.post("/login", (req, res) => {
     } else {
       return res.json({ Status: "Error", Error: "Wrong email or password" });
     }
+  });
+});
+
+app.post("/create", upload.single("image"), (req, res) => {
+  const sql =
+    "INSERT INTO employee (`name`, `email`, `password`, `address`, `salary`, `image`) VALUES (?, ?, ?, ?, ?, ?)";
+  bcrypt.hash(req.body.password.toString(), 10, (err, hash) => {
+    if (err)
+      return res.json({ Status: "Error", Error: "Error in hashing password" });
+    const values = [
+      req.body.name,
+      req.body.email,
+      hash,
+      req.body.address,
+      req.body.salary,
+      req.file.filename,
+    ];
+    con.query(sql, values, (err, result) => {
+      if (err) return res.json({ Error: "Inside signup query" });
+      return res.json({ Status: "Success" });
+    });
   });
 });
 
