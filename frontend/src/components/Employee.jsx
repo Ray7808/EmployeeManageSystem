@@ -9,6 +9,15 @@ function Employee() {
       <Link to="/create" className="btn btn-success">
         Add Employee
       </Link>
+      <table>
+        <thead></thead>
+        <tr>
+          <th>Name</th>
+          <th>Image</th>
+          <th>Email</th>
+          <th>Address</th>
+        </tr>
+      </table>
     </div>
   );
 }

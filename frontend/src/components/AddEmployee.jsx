@@ -1,5 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 function AddEmployee() {
   const [data, setData] = useState({
@@ -10,6 +11,8 @@ function AddEmployee() {
     address: "",
     image: "",
   });
+
+  const navigate = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -23,7 +26,7 @@ function AddEmployee() {
     axios
       .post("http://localhost:8081/create", formData)
       .then((res) => {
-        console.log(res);
+        navigate("/employee");
       })
       .catch((err) => console.log(err));
   };
