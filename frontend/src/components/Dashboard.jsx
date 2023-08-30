@@ -1,5 +1,5 @@
 import "bootstrap-icons/font/bootstrap-icons.css";
-import { Link } from "react-router-dom";
+import { Link, Outlet } from "react-router-dom";
 
 function Dashboard() {
   return (
@@ -66,6 +66,7 @@ function Dashboard() {
             <div className="p-2 d-flex justify-content-center border shadow">
               <h4>Employee Management System</h4>
             </div>
+            <Outlet />
           </div>
         </div>
       </div>
