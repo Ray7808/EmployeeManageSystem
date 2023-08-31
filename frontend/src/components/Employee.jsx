@@ -1,23 +1,76 @@
 import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import styles from "./Employee.module.scss";
 
 function Employee() {
+  const [data, setData] = useState([]);
+  useEffect(() => {
+    axios
+      .get("http://localhost:8081/getEmployee")
+      .then((res) => {
+        if (res.data.Status === "Success") {
+          setData(res.data.Result);
+        } else {
+          alert("Error!");
+        }
+      })
+      .catch((err) => console.log(err));
+  }, []);
+
   return (
     <div className="px-5 py-3">
-      <div className="d-flex justify-content-center">
+      <div className="d-flex justify-content-center mt-2">
         <h3>Employee List</h3>
       </div>
       <Link to="/create" className="btn btn-success">
         Add Employee
       </Link>
-      <table>
-        <thead></thead>
-        <tr>
-          <th>Name</th>
-          <th>Image</th>
-          <th>Email</th>
-          <th>Address</th>
-        </tr>
-      </table>
+      <div className="mt-3">
+        <table className="table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Image</th>
+              <th>Email</th>
+              <th>Address</th>
+              <th>Salary</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {data.map((employee, index) => (
+              <tr key={index}>
+                <td>{employee.name}</td>
+                <td>
+                  <img
+                    src={`http://localhost:8081/images/${employee.image}`}
+                    alt="employee"
+                    className={styles.employee_image}
+                  />
+                </td>
+                <td>{employee.email}</td>
+                <td>{employee.address}</td>
+                <td>{employee.salary}</td>
+                <td>
+                  <Link
+                    to={`/edit/${employee._id}`}
+                    className="btn btn-sm btn-primary me-2"
+                  >
+                    Edit
+                  </Link>
+                  <Link
+                    to={`/delete/${employee._id}`}
+                    className="btn btn-sm btn-danger"
+                  >
+                    Delete
+                  </Link>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }

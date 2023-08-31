@@ -15,6 +15,7 @@ const app = express();
 app.use(cors());
 app.use(cookieParser());
 app.use(express.json());
+app.use(express.static("public"));
 
 const con = mysql.createConnection({
   host: "localhost",
@@ -43,6 +44,14 @@ const storage = multer.diskStorage({
 });
 
 const upload = multer({ storage: storage });
+
+app.get("/getEmployee", (req, res) => {
+  const sql = "SELECT * FROM employee";
+  con.query(sql, (err, result) => {
+    if (err) return res.json({ Error: "Get employee error in sql!" });
+    return res.json({ Status: "Success", Result: result });
+  });
+});
 
 app.post("/login", (req, res) => {
   const sql = "SELECT * FROM users WHERE email = ? AND password = ?";
